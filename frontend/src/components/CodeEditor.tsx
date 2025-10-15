@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Editor from "@monaco-editor/react";
+import { connectWebSocket, sendMessage } from "../services/websocket.ts";
 
 const CodeEditor: React.FC = () => {
     const [code, setCode] = useState("// Start coding in CodeAstra 🚀");
 
+    useEffect(() => {
+        connectWebSocket((msg) => {
+            console.log("Received message:", msg);
+        });
+    })
+
     const handleEditorChange = (value: string | undefined) => {
         setCode(value || "");
-        console.log("Code updated:", value);
+        sendMessage(value || "");
     };
 
     return (
-        <div>
+        <div className="h-screen w-full bg-gray-900">
             <Editor
                 height="100%"
                 defaultLanguage="javascript"
